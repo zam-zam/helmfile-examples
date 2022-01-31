@@ -37,9 +37,9 @@ environments:
 ```
 apps:
   newapp:
-    repo: helm-private-incubator
+    repo: private
     chart: newapp
-    version: 0.1.0-develop-SNAPSHOT
+    version: 0.1.0-develop
 ```
 
 2. Добавить файл с общими для всех окружения параметрами релиза приложения в `releases/newapp.yaml.gotmpl`
@@ -70,7 +70,6 @@ ingress:
 apps:
   newapp:
     installed: true
-    repo: helm-private-stable
     version: 1.2.0
 ```
 
