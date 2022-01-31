@@ -1,0 +1,23 @@
+# client01/prod
+.client01/prod:
+  variables:
+    ENV: client01/prod
+    NAMESPACE: client01-prod
+    CLUSTER: https://k8s.prod.example.com:6443
+    TOKEN: ${SECRET_KUBE_TOKEN_PROD}
+    GPG_SECRET_KEY: ${SECRET_GPG_PRIVATE_KEY}
+  resource_group: client01/prod
+
+## diff
+client01/prod:diff:
+  extends:
+    - .base_diff
+    - .client01/prod
+  rules: !reference [.rules_branch_production, rules]
+
+## deploy
+client01/prod:deploy:
+  extends:
+    - .base_deploy
+    - .client01/prod
+  rules: !reference [.rules_branch_production_manual, rules]

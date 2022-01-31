@@ -1,0 +1,13 @@
+apps:
+  store-backend:
+    repo: private
+    chart: store-backend
+    version: 0.1.0-develop
+  store-frontend:
+    repo: private
+    chart: store-frontend
+    version: 0.1.0-develop
+  text-parser:
+    repo: private
+    chart: text-parser
+    version: 0.1.0-develop

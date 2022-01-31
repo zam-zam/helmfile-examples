@@ -1,0 +1,3 @@
+{{- if (.Values | getOrNil .Release.Name) }}
+{{ .Values | getOrNil .Release.Name | toYaml }}
+{{- end }}

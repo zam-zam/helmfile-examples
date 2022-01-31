@@ -1,0 +1,16 @@
+fullnameOverride: store-backend
+
+replicas: 1
+
+env:
+  KEYCLOAK_ADDR: {{ .Values.global.ssoUrl }}
+  DB_ADDR: jdbc:postgresql://postgres-postgresql:5432/store
+  DB_USER: store
+  DB_PASSWORD: store
+
+ingress:
+  enabled: true
+  paths:
+    - /api
+  hosts:
+    - store.{{ .Values.global.ingressDomain }}

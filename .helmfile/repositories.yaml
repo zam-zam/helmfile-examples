@@ -1,0 +1,7 @@
+repositories:
+  - name: private
+    url: https://helm-repo.example.com
+  - name: stable
+    url: https://charts.helm.sh/stable
+  - name: codecentric
+    url: https://codecentric.github.io/helm-charts

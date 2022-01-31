@@ -1,0 +1,43 @@
+# team/dev
+.team/dev:
+  variables:
+    ENV: team/dev
+    NAMESPACE: team-dev
+    CLUSTER: https://k8s.dev.example.com:6443
+    TOKEN: ${SECRET_KUBE_TOKEN_DEV}
+    GPG_SECRET_KEY: ${SECRET_GPG_PRIVATE_KEY}
+  resource_group: team/dev
+
+## diff
+team/dev:diff:
+  extends:
+    - .base_diff
+    - .team/dev
+
+## deploy
+team/dev:deploy:
+  extends:
+    - .base_deploy
+    - .team/dev
+
+# team/test
+.team/test:
+  variables:
+    ENV: team/test
+    NAMESPACE: team-test
+    CLUSTER: https://k8s.test.example.com:6443
+    TOKEN: ${SECRET_KUBE_TOKEN_TEST}
+    GPG_SECRET_KEY: ${SECRET_GPG_PRIVATE_KEY}
+  resource_group: team/test
+
+## diff
+team/test:diff:
+  extends:
+    - .base_diff
+    - .team/test
+
+## deploy
+team/test:deploy:
+  extends:
+    - .base_deploy
+    - .team/test

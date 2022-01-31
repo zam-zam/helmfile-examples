@@ -1,0 +1,21 @@
+templates:
+  .default: &default
+    missingFileHandler: Info
+    values:
+      # Apps
+      - apps/*.*
+      # Env
+      - envs/{{ .Environment.Name }}/*.*
+      # Values
+      - envs/{{ .Environment.Name }}/values/*.*
+    secrets:
+      # Secrets
+      - envs/{{ .Environment.Name }}/secrets/*.*
+
+environments:
+  team/dev:
+    <<: *default
+  team/test:
+    <<: *default
+  client01/prod:
+    <<: *default

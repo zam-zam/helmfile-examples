@@ -1,0 +1,13 @@
+stages:
+  - diff
+  - deploy
+
+variables:
+  DIFF_LINE_NUM: 3
+  HELM_VERSION: 3.5.2
+  CONCURRENCY: 3
+
+include:
+  - local: .gitlab/.base.yml
+  - local: .gitlab/team.yml
+  - local: .gitlab/client01.yml

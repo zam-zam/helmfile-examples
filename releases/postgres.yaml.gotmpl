@@ -1,0 +1,27 @@
+replicas: 1
+
+postgresqlPassword: postgres
+
+replication:
+  enabled: false
+
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 20Gi
+
+volumePermissions:
+  enabled: true
+
+initdbScripts:
+  {{- range (list "keycloak" "store") }}
+  db_init-{{ . }}.sh: |
+    if [ -z  $(psql -U 'postgres' -tAq -c "SELECT 1 AS result from pg_database where datname='{{ . }}'";) ]; then
+        psql \
+        -U 'postgres' \
+        -c "CREATE DATABASE {{ . }}" \
+        -c "CREATE USER {{ . }} WITH PASSWORD '{{ . }}'" \
+        -c "GRANT ALL PRIVILEGES ON DATABASE {{ . }} to {{ . }}";
+    fi
+  {{- end }}

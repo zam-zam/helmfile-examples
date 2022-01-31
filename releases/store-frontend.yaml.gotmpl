@@ -1,0 +1,13 @@
+fullnameOverride: store-frontend
+
+replicas: 1
+
+env:
+  KEYCLOAK_ADDR: {{ .Values.global.ssoUrl }}
+
+ingress:
+  enabled: true
+  paths:
+    - /
+  hosts:
+    - store.{{ .Values.global.ingressDomain }}

@@ -1,0 +1,11 @@
+bases:
+  - .helmfile/environments.yaml
+---
+bases:
+  - .helmfile/repositories.yaml
+  - .helmfile/releases.yaml
+helmDefaults:
+  wait: true
+  atomic: true
+  devel: true
+  createNamespace: true

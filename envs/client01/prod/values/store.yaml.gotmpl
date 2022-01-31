@@ -1,0 +1,10 @@
+store-backend:
+  replicas: 2
+  env:
+    DB_ADDR: jdbc:postgresql://db.test.example.com:5432/store
+    ENV: test
+
+store-frontend:
+  replicas: 2
+  env:
+    ENV: test

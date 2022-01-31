@@ -1,0 +1,81 @@
+# scripts
+.script_prepare:
+  before_script:
+    - helmswitch ${HELM_VERSION}
+    - processKubeContext.sh
+    - echo ${GPG_SECRET_KEY} | base64 -d | gpg --import
+    - |
+      cat << EOF
+      ---
+      environment=${ENV}
+      namespace=${NAMESPACE}
+      ---
+      EOF
+
+# rules
+## master
+.rules_branch_master_manual:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: manual
+
+## production
+.rules_branch_production:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+
+.rules_branch_production_manual:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      when: manual
+
+# bases
+.base_helmfile:
+  image:
+    name: artifactory.example.com/base-helm:2
+    entrypoint: [""]
+  before_script:
+    - !reference [.script_prepare, before_script]
+  rules: !reference [.rules_branch_master_manual, rules]
+
+## diff
+.base_diff:
+  stage: diff
+  extends:
+    - .base_helmfile
+  script:
+    - >
+      helmfile
+      --environment ${ENV}
+      --namespace ${NAMESPACE}
+      diff
+      --context ${DIFF_LINE_NUM}
+      --detailed-exitcode
+    - helm -n ${NAMESPACE} ls -a
+  allow_failure: true
+
+## deploy
+.base_deploy:
+  stage: deploy
+  extends:
+    - .base_helmfile
+  script:
+    - kubectl get ns ${NAMESPACE} || kubectl create ns ${NAMESPACE}
+    - >
+      kubecolor
+      --force-colors
+      get events
+      --namespace=${NAMESPACE}
+      --field-selector involvedObject.kind=Pod
+      --sort-by=.metadata.creationTimestamp
+      -o custom-columns=TIME:lastTimestamp,TYPE:type,REASON:reason,NAME:involvedObject.name,MESSAGE:message
+      --watch-only &
+    - >
+      helmfile
+      --environment ${ENV}
+      --namespace ${NAMESPACE}
+      apply
+      --context ${DIFF_LINE_NUM}
+      --concurrency ${CONCURRENCY}
+      --skip-diff-on-install
+    - helm -n ${NAMESPACE} ls -a

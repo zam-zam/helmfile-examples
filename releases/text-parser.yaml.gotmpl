@@ -1,0 +1,7 @@
+fullnameOverride: text-parser
+
+replicas: 1
+
+env:
+  KEYCLOAK_ADDR: {{ .Values.global.ssoUrl }}
+  STORE_BACKEND: http://store-backend
