@@ -113,3 +113,71 @@ cat<<<"${GPG_PRIVATE_KEY}" | gpg --import
 3. Открыть и отредактировать файл переменных утилитой sops
 
 `sops envs/client02/test/secrets/_all.yaml`
+
+# Как это работает
+
+## Окружения
+
+Окружения описаны в файле `.helmfile/environments.yaml`. Все окружения переиспользуют (с помощью yaml якоря и ссылки) единый шаблон, в котором в нужной последовательности подключаются переменные из папок окружений
+
+1. Описания хелмовых релизов из `apps/*.*`: имя релиза, репа helm чарта, его название и версия
+2. Настройки и глобальные переменные самого окружения из `envs/{{ .Environment.Name }}/*.*`. Здесь описаны, какие helm релизы должны быть установлены в окружение, зависимости от других helm релизов, а также глобальные переменные самого окружения, которые можно подключать в values релизов
+3. Переменные для helm релизов `envs/{{ .Environment.Name }}/values/*.*`
+4. Зашифрованные переменные для helm релизов `envs/{{ .Environment.Name }}/secrets/*.*`
+
+## Helm репозитории
+
+Описываются в `.helmfile/repositories.yaml`. Используются затем в описании helm релизов
+
+## Helm релизы
+
+Список релизов для каждого окружения динамически формируется из словаря `apps` прогонкой через шаблон `.helmfile/releases.yaml`
+
+Например, такое описание apps
+
+```yaml
+apps:
+  postgres:
+    repo: stable
+    chart: postgresql
+    version: 8.4.0
+    installed: true
+```
+
+превратится в такой список релизов
+
+```yaml
+releases:
+- name: postgres
+  labels:
+    app: postgres
+  chart: stable/postgresql
+  version: 8.4.0
+  missingFileHandler: Info
+  values:
+    - releases/postgres.yaml.gotmpl
+    - releases/_override.yaml.gotmpl
+  installed: true
+  installed: false
+```
+
+### Переменные helm релиза
+
+В `releases/postgres.yaml.gotmpl` описаны общие для всех окружений переменные хелмового релиза
+
+С помощью файла `releases/_override.yaml.gotmpl` переменные хелмового релиза конкретного окружения оверрайдят общие. Так сделано, чтобы в окружении можно было задавать переменные в одном файле в таком формате
+
+```yaml
+store-backend:
+  replicas: 2
+  env:
+    DB_ADDR: jdbc:postgresql://db.test.example.com:5432/store
+    ENV: test
+
+store-frontend:
+  replicas: 2
+  env:
+    ENV: test
+```
+
+вместо того, чтобы создавать для каждого релиза отдельный файл (когда в одном окружении десяток приложений, то неудобно бегать по десяткам файлов)
