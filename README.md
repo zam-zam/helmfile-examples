@@ -16,6 +16,8 @@
 >
 > Helm чарт для **simple-python-web-app** https://github.com/zzamtools/helm-charts/tree/master/charts/simple-python-web-app
 
+[![](.readme/yt_video.png)](http://www.youtube.com/watch?v=tpwnB2TPRlI "Quick Start Helmfile Examples Video")
+
 Установим необходимые утилиты
 ```bash
 sudo apt-get update
