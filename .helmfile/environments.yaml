@@ -13,9 +13,11 @@ templates:
       - envs/{{ .Environment.Name }}/secrets/*.*
 
 environments:
-  team/dev:
+  clusters/k0s:
     <<: *default
-  team/test:
+  client-a/prod:
     <<: *default
-  client01/prod:
+  client-b/prod:
+    <<: *default
+  client-c/prod:
     <<: *default

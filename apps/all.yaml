@@ -1,0 +1,5 @@
+apps:
+  simple-python-web-app:
+    repo: zzamtools
+    chart: simple-python-web-app
+    version: 1.0.0

@@ -1,0 +1,19 @@
+image:
+  tag: 1.0.0
+
+replicas: 1
+
+ingress:
+  enabled: true
+  spec:
+    rules:
+    - host: simple-python-web-app.{{ .Values.global.ingressDomain }}
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: simple-python-web-app
+              port:
+                name: http

@@ -1,9 +1,0 @@
-apps:
-  postgres:
-    repo: stable
-    chart: postgresql
-    version: 8.4.0
-  keycloak:
-    repo: codecentric
-    chart: keycloak
-    version: 6.2.0

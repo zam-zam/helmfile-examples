@@ -1,0 +1,15 @@
+controller:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 256Mi
+  kind: DaemonSet
+  hostNetwork: true
+  service:
+    type: ""
+  metrics:
+    enabled: false
+  config:
+    enable-real-ip: "true"
+    use-forwarded-headers: "false"
+  watchIngressWithoutClass: "true"

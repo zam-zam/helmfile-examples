@@ -1,7 +1,5 @@
 repositories:
-  - name: private
-    url: https://helm-repo.example.com
-  - name: stable
-    url: https://charts.helm.sh/stable
-  - name: codecentric
-    url: https://codecentric.github.io/helm-charts
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+  - name: zzamtools
+    url: https://zzamtools.github.io/helm-charts

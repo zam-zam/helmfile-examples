@@ -1,0 +1,7 @@
+apps:
+  # ingress
+  ingress-nginx:
+    repo: ingress-nginx
+    chart: ingress-nginx
+    version: 4.0.16
+    namespace: ingress-nginx
