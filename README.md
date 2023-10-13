@@ -157,6 +157,23 @@ curl -s 'http://127.0.0.1' -H 'Host: simple-python-web-app.client-c-prod.example
 
 В файле `.sops.yaml` указывается публичный ключ/fingerprint вашего приватного ключа
 
+## Как изменить секрет (зашифрованную переменную)
+
+1. Добавить приватный ключ
+```bash
+mkdir -p ~/.config/sops/age
+cat << EOF > ~/.config/sops/age/keys.txt
+# created: 2023-10-13T13:40:14+03:00
+# public key: age1famrcgy36ke00r3vwpxhmf547d9xxc8snsaen50hfsx9k0xe5sdsmstyzf
+AGE-SECRET-KEY-1LL2L450GYAF4EE9EJMEDX25T40WVP8JAEYCMYMQPRDEH25S558VSWYJR35
+EOF
+```
+
+2. Отредактировать секреты нужного окружения
+```bash
+helm secrets edit envs/client-a/prod/secrets/_all.yaml
+```
+
 ## Деплой окружений
 
 ### Как задеплоить окружение `client-a/prod` в неймспейс `client-a-prod`
