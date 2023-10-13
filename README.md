@@ -141,6 +141,18 @@ curl -s 'http://127.0.0.1' -H 'Host: simple-python-web-app.client-c-prod.example
 
 # Инструкции
 
+## Переменные helm чартов
+
+В `releases/<release-name>.yaml.gotmpl` задаются общие для всех окружений параметры helm чарта релиза
+В `envs/values/*.yaml[.gotmpl]` задаются параметры helm чарта, которые оверрайдят общие параметры
+В `envs/secrets/*.yaml` в зашифрованном виде задаются параметры helm чарта, которые оверрайдят и общие параметры, и параметры окружения из `values/`
+
+## Шифрование секретов
+
+Секреты хранятся в самом репозитории в зашифрованном виде. Для шифрования используется [плагин helm secrets](https://github.com/jkroepke/helm-secrets) и утилита [sops](https://github.com/getsops/sops). Шифровать можно gpg ключом, [age](https://github.com/FiloSottile/age) и другими способами (см. манаул по **sops**)
+
+В файле `.sops.yaml` указывается публичный ключ/fingerprint вашего приватного ключа
+
 ## Деплой окружений
 
 ### Как задеплоить окружение `client-a/prod` в неймспейс `client-a-prod`
