@@ -129,7 +129,7 @@ curl -s 'http://127.0.0.1' -H 'Host: simple-python-web-app.client-c-prod.example
 
 ![](.readme/curl_pods.png?raw=true "Curl Pods")
 
-Ответы также соответсвуют тому, что задано в параметрах клиентских окружений
+Ответы инстансов приложения также соответствуют тому, что задано в параметрах клиентских окружений
 
 В **client-a-prod** и **client-b-prod** запущено приложение **simple-python-web-app** версии **1.0.0**, т.к. это задано для всех окружений, а для client-c-prod версия приложения задана **1.2.1**
 
@@ -228,53 +228,52 @@ environments:
 
 ## Helm релизы
 
-Список релизов для каждого окружения динамически формируется из словаря `apps` прогонкой через шаблон `.helmfile/releases.yaml`
+Список релизов для каждого окружения динамически формируется из словаря **apps** прогонкой через шаблон `.helmfile/releases.yaml`. Это сделано для абстрагирования от формата самого helmfile с целью упрощения
 
-Например, такое описание apps
+Например, такое описание **apps**
 
 ```yaml
 apps:
-  postgres:
-    repo: stable
-    chart: postgresql
-    version: 8.4.0
+  simple-python-web-app:
+    repo: zzamtools
+    chart: simple-python-web-app
+    version: 1.0.0
     installed: true
 ```
 
-превратится в такой список релизов
+превратится в такой список релизов, который ожидает получить helmfile
 
 ```yaml
 releases:
-- name: postgres
+- name: simple-python-web-app
   labels:
-    app: postgres
-  chart: stable/postgresql
-  version: 8.4.0
+    app: simple-python-web-app
+  chart: zzamtools/simple-python-web-app
+  version: 1.0.0
   missingFileHandler: Info
   values:
-    - releases/postgres.yaml.gotmpl
+    - releases/simple-python-web-app.yaml.gotmpl
     - releases/_override.yaml.gotmpl
   installed: true
-  installed: false
 ```
 
 ### Переменные helm релиза
 
-В `releases/postgres.yaml.gotmpl` описаны общие для всех окружений переменные хелмового релиза
+В `releases/simple-python-web-app.yaml.gotmpl` описаны общие для всех окружений переменные хелмового релиза
 
-С помощью файла `releases/_override.yaml.gotmpl` переменные хелмового релиза конкретного окружения оверрайдят общие. Так сделано, чтобы в окружении можно было задавать переменные в одном файле в таком формате
+С помощью файла `releases/_override.yaml.gotmpl` переменные хелмового релиза конкретного окружения оверрайдят общие. Так сделано, чтобы в окружении можно было задавать переменные в одном файле вместо того, чтобы создавать для каждого релиза отдельный файл (когда в одном окружении десяток приложений, то неудобно бегать по десяткам файлов)
 
 ```yaml
-store-backend:
-  replicas: 2
+simple-python-web-app:
   env:
-    DB_ADDR: jdbc:postgresql://db.test.example.com:5432/store
-    ENV: test
+    CLIENT_ID: "Client A"
 
-store-frontend:
+simple-nodejs-app:
   replicas: 2
+  image:
+    tag: 2.5.3
   env:
-    ENV: test
+    MARKET_ID: "cl-aaa000fff"
+  ingress:
+    enabled: true
 ```
-
-вместо того, чтобы создавать для каждого релиза отдельный файл (когда в одном окружении десяток приложений, то неудобно бегать по десяткам файлов)
