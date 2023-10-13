@@ -146,7 +146,9 @@ curl -s 'http://127.0.0.1' -H 'Host: simple-python-web-app.client-c-prod.example
 ## Переменные helm чартов
 
 В `releases/<release-name>.yaml.gotmpl` задаются общие для всех окружений параметры helm чарта релиза
+
 В `envs/values/*.yaml[.gotmpl]` задаются параметры helm чарта, которые оверрайдят общие параметры
+
 В `envs/secrets/*.yaml` в зашифрованном виде задаются параметры helm чарта, которые оверрайдят и общие параметры, и параметры окружения из `values/`
 
 ## Шифрование секретов
