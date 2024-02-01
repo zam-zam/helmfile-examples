@@ -16,7 +16,7 @@
 >
 > Helm чарт для **simple-python-web-app** https://github.com/zzamtools/helm-charts/tree/master/charts/simple-python-web-app
 
-[![](.readme/yt_video.png)](http://www.youtube.com/watch?v=tpwnB2TPRlI "Quick Start Helmfile Examples Video")
+https://github.com/zam-zam/helmfile-examples/assets/5456100/33e8b300-f3a2-4c67-9341-612842086811
 
 Установим необходимые утилиты
 ```bash
